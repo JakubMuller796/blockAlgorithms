@@ -2,7 +2,7 @@
 
 This repository contains MATLAB scripts and functions developed for the numerical experiments in my bachelor’s thesis.
 
-The code focuses on implementing and testing three block algorithms, with an emphasis on clarity and reproducibility of results. It was used to generate the data and figures presented in the thesis.
+The code focuses on implementing and testing three block algorithms, with an emphasis on reproducibility of results. It was used to generate the data and figures presented in the thesis.
 
 ## Setup
 
