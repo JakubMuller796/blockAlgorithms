@@ -42,4 +42,5 @@ The algorithms, plotting routines, and auxiliary functions are located in '/src'
 ## Additional remarks
 
 Several additional quantities are computed and stored for theoretical analysis but were not included in the thesis. These include, for example, the option to choose between SVD and QR-based rank estimation and deflation strategies in DRBCG and BFBCG.
+There are also several additional plotting options that can be configured in the plotting sections of the main scripts.
 All features should be fully functional (or at least easily fixable) and can be freely experimented with.
