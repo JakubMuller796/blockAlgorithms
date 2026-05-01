@@ -22,6 +22,7 @@ The algorithms, plotting routines, and auxiliary functions are located in '/src'
 - 'maxit' – maximum number of iterations  
 - 'coef' (0/1) – enables computation of the tridiagonal matrix  
 - 'reo' – enables multiple reorthogonalization  
+- 'times' – is a matrix containing computational times (not the time to convergence)
 
 ---
 
