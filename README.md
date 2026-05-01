@@ -8,7 +8,7 @@ The code focuses on implementing and testing three block algorithms, with an emp
 
 It is recommended to set the working directory to '.../blockAlgorithms', since results are saved by default in the '/exp' folder (Computational times can become very long for large matrices, so it is convenient to save the results rather than recomputing them each time). By default, this folder contains precomputed results, so it is possible to run only the plotting parts of the scripts after preloading the 'matrix' variable.
 
-The code is written in a general form and can be used with any matrices placed in the '/matrix' directory and and specified in the corresponding script. The default settings in each script correspond to the experiments used in the thesis (but can be easily modified).
+The code is written in a general form and can be used with any matrices placed in the '/matrix' directory and specified in the corresponding script. The default settings in each script correspond to the experiments used in the thesis (but can be easily modified).
 
 The algorithms, plotting routines, and auxiliary functions are located in '/src'.
 
