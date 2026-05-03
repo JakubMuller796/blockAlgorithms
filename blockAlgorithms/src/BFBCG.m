@@ -1,10 +1,11 @@
-function [x,bf_omega,numrank,conv] = BFBCG(A,b,x_0,type,tol,rankrevtol,maxit,xex)
+function [x,bf_omega,numrank,conv] = BFBCG(A,b,x_0,type,tol,rankrevtol,maxit,tillConv,xex)
 
 tic
 bf_omega = [];
 T = [];
 [n,m] = size(b);
 conv = [0,0];
+den = norm(b,'fro');
 
 x = x_0;
 
@@ -18,17 +19,16 @@ end
 numrank = [size(p,2),0];
 curr_size = size(p,2);
 
-den = norm(b,'fro');
-
 for i = 1:maxit
+    
     Q = A*p;
-
     alpha = (p'*Q)\(p'*r);
     x = x + p*alpha;
-
     r = r - Q*alpha;
     
-    bf_omega = [bf_omega trace((x-xex)'*A*(x-xex))];
+    if isempty(xex) == 0
+        bf_omega = [bf_omega trace((x-xex)'*A*(x-xex))];
+    end
     
     if tol > 0 && conv(1) == 0
         res = norm(r,'fro') / den;
@@ -36,6 +36,9 @@ for i = 1:maxit
             % fprintf("Convergence in %d\n",i)
             conv(1) = toc;
             conv(2) = i;
+            if tillConv
+                break
+            end
         end
     end
 

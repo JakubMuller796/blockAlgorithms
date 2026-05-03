@@ -13,6 +13,7 @@ maxit = 6000;
 rankrevtols = [1e-12,1e-8];
 facs = ["svd","svd"];
 tol = 1e-13;
+tillConv = 0;
 %%% exp3 setup %%%
 
 x_0 = zeros(n,m);
@@ -30,7 +31,7 @@ fprintf("==== orth = " + fac + ", rankrevtol = " + rankrevtol + " ====\n")
 
 %%% BCG
 tic
-[x_bcg,~,bcg_omega,numrank_bcg_cell{h},conv_bcg_cell{h}] = BCG(A,b,x_0,maxit,0,0,tol,rankrevtol,xex);
+[x_bcg,~,bcg_omega,numrank_bcg_cell{h},conv_bcg_cell{h}] = BCG(A,b,x_0,maxit,tillConv,0,0,tol,rankrevtol,xex);
 times(h,1) = toc;
 fprintf("BCG fro || x - xex || = %.5e\n",norm(x_bcg - xex,"fro"))
 fprintf("BCG fro || A*x - b || = %.5e\n",norm(A*x_bcg - b,"fro"))
@@ -39,7 +40,7 @@ fprintf('true convergence (time,iter) = (%f, %d)\n', conv_bcg_cell{h}(1), conv_b
 
 %%% DRBCG
 tic
-[x_dr,~,dr_omega,numrank_dr_cell{h},conv_dr_cell{h}] = DRBCG(A,b,x_0,0,0,tol,rankrevtol,maxit,"qr",xex);
+[x_dr,~,dr_omega,numrank_dr_cell{h},conv_dr_cell{h}] = DRBCG(A,b,x_0,0,0,tol,rankrevtol,maxit,tillConv,"qr",xex);
 times(h,2) = toc;
 fprintf("DR fro || x - xex || = %.5e\n",norm(x_dr - xex,"fro"))
 fprintf("DR fro || A*x - b || = %.5e\n",norm(A*x_dr - b,"fro"))
@@ -48,7 +49,7 @@ fprintf('true convergence (time,iter) = (%f, %d)\n', conv_dr_cell{h}(1), conv_dr
 
 %%% BFBCG
 tic
-[x_bf,omega_bf_cell{h},numrank_bf_cell{h},conv_bf_cell{h}] = BFBCG(A,b,x_0,"svd",tol,rankrevtol,maxit,xex);
+[x_bf,omega_bf_cell{h},numrank_bf_cell{h},conv_bf_cell{h}] = BFBCG(A,b,x_0,"svd",tol,rankrevtol,maxit,tillConv,xex);
 times(h,3) = toc;
 fprintf("BF fro || x - xex || = %.5e\n",norm(x_bf - xex,"fro"))
 fprintf("BF fro || A*x - b || = %.5e\n",norm(A*x_bf - b,"fro"))

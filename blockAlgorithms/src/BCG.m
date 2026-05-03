@@ -1,4 +1,4 @@
-function [x,T,omega_bcg,numrank,conv] = BCG(A,b,x_0,maxit,coef,reo,tol,rankrevtol,xex)
+function [x,T,omega_bcg,numrank,conv] = BCG(A,b,x_0,maxit,tillConv,coef,reo,tol,rankrevtol,xex)
 
 tic
 conv = [0,0];
@@ -6,12 +6,11 @@ conv = [0,0];
 omega_bcg = [];
 numrank = [];
 T = [];
+den = norm(b,'fro');
 
 x = x_0;
 r = b - A*x_0;
 p = r;
-den = norm(b,'fro');
-omega_bcg = [omega_bcg trace((x-xex)'*A*(x-xex))];
 
 if reo, [V,~] = qrp(r); end
 
@@ -28,13 +27,14 @@ curr_size = size(p,2);
 for i = 1:maxit
 
     ga = (p'*A*p) \ (r'*r);
-    
     x = x + p*ga;
-
     rnext = r - A*p*ga;
+
     if reo, [rnext,V] = reorth(rnext,V,reo); end 
 
-    omega_bcg = [omega_bcg trace((x-xex)'*A*(x-xex))];
+    if isempty(xex) == 0
+        omega_bcg = [omega_bcg trace((x-xex)'*A*(x-xex))];
+    end
 
     if tol > 0 && conv(1) == 0
         res = norm(rnext,'fro') / den;
@@ -42,13 +42,15 @@ for i = 1:maxit
             % fprintf("Convergence in %d\n",i)
             conv(1) = toc;
             conv(2) = i;
+            if tillConv
+                break
+            end
         end
     end
 
 
     de = (r'*r)\(rnext'*rnext);
     r = rnext;
-
     p = rnext + p*de;
 
     %%% Rank check via SVD

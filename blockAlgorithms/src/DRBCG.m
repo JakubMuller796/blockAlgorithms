@@ -1,32 +1,33 @@
-function [x,T,dr_omega,numrank,conv] = DRBCG(A,b,x_0,coef,reo,tol,rankrevtol,maxit,type,xex)
+function [x,T,dr_omega,numrank,conv] = DRBCG(A,b,x_0,coef,reo,tol,rankrevtol,maxit,tillConv,type,xex)
 
 tic
 [n,m] = size(b);
 dr_omega = [];
-numrank = [];
-den = norm(b,'fro');
+numrank = [m,0];
+curr_size = m;
 T = [];
 conv = [0,0];
+den = norm(b,'fro');
 
 x = x_0;
 r = b - A*x_0;
 
 if m == 1
-    % Vector
+    %%% Vector
     sigm = norm(r);
     w = r/sigm;
+
 elseif type == "qr"
-    % QR
+    %%% QR
     [w,sigm] = qrp(r);
+
 elseif type == "svd"
-    % SVD
+    %%% SVD
     [aa,bb,cc] = svd(r,"econ");
     w = aa;
     sigm = bb * cc';
 end
 
-numrank = [m,0];
-curr_size = m;
 s = w;
 
 if reo, V = w; end  
@@ -39,20 +40,12 @@ end
 
 
 for i = 1:maxit
+
     ksi = inv(s'*A*s);
-    
     x = x + s*ksi*sigm;
     
-    dr_omega = [dr_omega trace((x-xex)'*A*(x-xex))];
-    
-    if tol > 0 && conv(1) == 0
-        r = w*sigm;
-        res = norm(r,'fro') / den;
-        if res < tol
-            % fprintf("convergence in %d\n",i)
-            conv(1) = toc;
-            conv(2) = i;
-        end
+    if isempty(xex) == 0
+        dr_omega = [dr_omega trace((x-xex)'*A*(x-xex))];
     end
 
     wAs = w - (A*s)*ksi;
@@ -60,40 +53,19 @@ for i = 1:maxit
     if reo, [wAs,V] = reorth(wAs,V,reo); end 
 
     if m == 1
-        % Vector
+        %%% Vector
         zeta = norm(wAs);
         w = (wAs)/zeta;
 
     elseif type == "qr"
-        % QR
+        %%% QR
         [w,zeta] = qrp(wAs);
 
-        if rankrevtol > 0
-            [~,D,~] = svd(sigm,"econ");
-            d = abs(diag(D));
-            rank = sum(d > rankrevtol*d(1));
-            if rank ~= curr_size
-                numrank = [numrank;[rank, i]];
-                curr_size = rank;
-                % fprintf("rank-deficiency in %d\n",i)
-            end
-        end
     elseif type == "svd"
-        % SVD
+        %%% SVD
         [aa,bb,cc] = svd(wAs,"econ");
         w = aa;
         zeta = bb * cc';
-
-        if rankrevtol > 0
-            [~,D,~] = svd(sigm,"econ");
-            d = abs(diag(D));
-            rank = sum(d > rankrevtol*d(1));
-            if rank ~= curr_size
-                numrank = [numrank;[rank, i]];
-                curr_size = rank;
-                % fprintf("rank-deficiency in %d\n",i)
-            end
-        end
     end
 
     
@@ -113,6 +85,31 @@ for i = 1:maxit
 
     s = w + s*zeta';
     sigm = zeta*sigm;
+
+    if tol > 0 && conv(1) == 0
+        r = w*sigm;
+        res = norm(r,'fro') / den;
+        if res < tol
+            % fprintf("convergence in %d\n",i)
+            conv(1) = toc;
+            conv(2) = i;
+            if tillConv
+                break
+            end
+        end
+    end
+
+    if rankrevtol > 0
+        r = w*sigm;
+        [~,D,~] = svd(r,"econ");
+        d = abs(diag(D));
+        rank = sum(d > rankrevtol*d(1));
+        if rank ~= curr_size
+            numrank = [numrank;[rank, i]];
+            curr_size = rank;
+            % fprintf("rank-deficiency in %d\n",i)
+        end
+    end
 
 end
 

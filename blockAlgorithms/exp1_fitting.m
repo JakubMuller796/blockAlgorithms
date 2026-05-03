@@ -8,6 +8,7 @@ m = 24;
 coef = 1;
 tol = 1e-13;
 rankrevtol = 1e-12;
+tillConv = 0;
 %%% exp1 setup %%%
 
 for mat = 1:2 
@@ -26,8 +27,8 @@ b = A*xex;
 times = zeros(3,1);
 
 for h = 1:3
-fprintf("==== reo = " + (h-1) + " ====\n")
 reo = h-1;
+fprintf("==== reo = " + reo + " ====\n")
 
 %%% block Lanczos
 tic
@@ -40,14 +41,14 @@ end
 
 %%% BCG
 tic
-[x_bcg, T_bcg, omega_bcg, numrank_bcg,conv_bcg] = BCG(A,b,x_0,maxit,coef,reo,tol,rankrevtol,xex);
+[x_bcg, T_bcg,~,numrank_bcg,conv_bcg] = BCG(A,b,x_0,maxit,tillConv,coef,reo,tol,rankrevtol,[]);
 times(2) = toc;
 fprintf("BCG done in %.4f s\n",times(2));
 fprintf("fro || T_lan - T_bcg || = %.5e\n",norm(T_bcg-T_lan(1:size(T_bcg,1),1:size(T_bcg,2)),"fro"))
 
 %%% DRBCG
 tic
-[x,T_dr,dr_omega,numrank_dr,conv_dr] = DRBCG(A,b,x_0,coef,reo,tol,rankrevtol,maxit,"qr",xex);
+[x,T_dr,~,numrank_dr,conv_dr] = DRBCG(A,b,x_0,coef,reo,tol,rankrevtol,maxit,tillConv,"qr",[]);
 times(3) = toc;
 fprintf("DR done in %.4f s\n",times(3));
 fprintf("fro || T_lan - T_dr || = %.5e\n",norm(T_dr-T_lan,"fro"))
