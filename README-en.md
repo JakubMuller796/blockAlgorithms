@@ -2,7 +2,8 @@
 
 This repository contains MATLAB scripts and functions developed for the numerical experiments in my bachelor’s thesis.
 
-The code focuses on implementing and testing three block algorithms, namely 
+The code focuses on implementing and testing four block algorithms, namely 
+- Block Lanczos algorithm (Golub, Underwood, 1977),
 - BCG (Dianne O'Leary, 1980), 
 - DRBCG (Tichý, Meraunt, Šimonová, 2025), 
 - BFBCG (Yi, Li, 2017),
