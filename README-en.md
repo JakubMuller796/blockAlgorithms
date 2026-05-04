@@ -6,7 +6,7 @@ The code focuses on implementing and testing four block algorithms, namely
 - Block Lanczos algorithm (Golub, Underwood, 1977),
 - BCG (Dianne O'Leary, 1980), 
 - DRBCG (Tichý, Meraunt, Šimonová, 2025), 
-- BFBCG (Yi, Li, 2017),
+- BFBCG (Ji, Li, 2017),
 
 with an emphasis on reproducibility of results. It was used to generate the data and figures presented in the thesis.
 
