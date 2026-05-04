@@ -6,7 +6,7 @@ Byly implementovány a testovány čtyři blokové algoritmy:
 - Blokový Lanczosův algoritmus (Golub, Underwood, 1977) 
 - BCG (Dianne O'Leary, 1980),  
 - DRBCG (Tichý, Meraunt, Šimonová, 2025),  
-- BFBCG (Yi, Li, 2017),  
+- BFBCG (Ji, Li, 2017),  
 
 tak, aby bylo možné mé výsledky zreprodukovat.
 
